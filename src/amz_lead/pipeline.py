@@ -136,6 +136,8 @@ def main():
         logger.info("=" * 60)
         logger.info("阶段 4/5: 补号")
         logger.info("=" * 60)
+        logger.warning("⚠️ 补号阶段需要私有实现（探迹登录、验证码自愈、OCR、回填）。")
+        logger.warning("   开源版仅提供接口定义，请用 --skip-lookup 跳过，或安装商业版。")
         input_file = scored_file if scored_file.exists() else (resolved_file if resolved_file.exists() else raw_file)
         cmd = [
             "amz-lookup",
@@ -143,6 +145,7 @@ def main():
             "--output", str(enriched_file),
             "--config", args.settings,
             "--batch-size", "10",
+            "--provider", "tungee",  # 需商业版
         ]
         if not run_cmd(cmd, args.dry_run):
             sys.exit(1)

@@ -10,6 +10,12 @@
 
 `amz-lead` 是一个面向跨境电商服务商（货代、海外仓、营销、合规、金融）的**开源数据采集与清洗框架**。它解决一个核心问题：**如何以低成本、高合规、可持续的方式，持续获取「亚马逊美国站中国卖家」的真实联系方式与经营画像。**
 
+> ⚠️ **开源版 vs 闭源版**
+> - ✅ **开源版（MIT）**：采集层、还原层、评分层、流水线编排、接口定义
+> - 🔒 **闭源版（商业授权）**：补号层实现（探迹登录、验证码自愈、OCR识别、Excel回填）、OCR模型、云服务版API
+> - 开源版仅提供 `ILookupProvider` 抽象接口 + `StubLookupProvider` 测试存根
+> - 商业版/云服务版联系：cloud@amz-lead.example.com
+
 ---
 
 ## ✨ 核心能力
@@ -57,15 +63,18 @@ amz-lead/
 │   │   ├── leads_score.py        # 多维评分：可外呼性、主体一致性、运费潜力
 │   │   ├── street_map.py         # 注册地址聚类、扫楼路线生成
 │   │   └── cli.py                # 还原命令行入口
-│   ├── lookup/           # 补号层：探迹/天眼查/企查查批量查询
-│   │   ├── tungee_runner.py      # 探迹批量跑批主流程
-│   │   ├── tungee_unlock_api.py  # 探迹解锁接口封装
-│   │   ├── captcha_agent.py      # 验证码自愈（滑块/点选/图标）
-│   │   ├── ocr_phone.py          # 虚拟渲染号段 OCR 识别
-│   │   ├── backfill_excel.py     # 结果回填 Excel、四色标记
-│   │   ├── build_batches.py      # 外呼工单分批、去重、优先级排序
-│   │   ├── tyc_lookup.py         # 天眼查兜底查询
-│   │   └── cli.py                # 补号命令行入口
+│   ├── lookup/           # 补号层：接口定义 + 存根实现（开源）
+│   │   ├── __init__.py           # ILookupProvider、CompanyInfo、PhoneResult、StubLookupProvider
+│   │   ├── cli.py                # 补号命令行入口（支持 --provider stub/tungee）
+│   │   └── _private/             # 🔒 闭源实现（不含在开源分发中）
+│   │       ├── tungee_runner.py      # 探迹批量跑批主流程
+│   │       ├── tungee_unlock_api.py  # 探迹解锁接口封装
+│   │       ├── captcha_agent.py      # 验证码自愈（滑块/点选/图标）
+│   │       ├── ocr_phone.py          # 虚拟渲染号段 OCR 识别
+│   │       ├── backfill_excel.py     # 结果回填 Excel、四色标记
+│   │       ├── build_batches.py      # 外呼工单分批、去重、优先级排序
+│   │       ├── tyc_lookup.py         # 天眼查兜底查询
+│   │       └── pinyin_resolve.py     # 拼音辅助还原
 │   └── utils/            # 共享工具：配置、日志、限流、存储
 ├── configs/
 │   ├── cats.yaml                 # 类目树配置（含 yield_weights）
