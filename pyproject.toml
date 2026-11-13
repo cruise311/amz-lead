@@ -41,8 +41,10 @@ ocr = [
 ]
 # lookup-private extra: 闭源补号实现（探迹登录、验证码自愈、OCR、Excel回填）
 # ⚠️ 需商业授权，从私有仓库安装：
-# pip install amz-lead[lookup-private] --index-url https://git.yourdomain.com/api/pypi/simple
-# lookup-private = []
+# pip install "amz-lead[lookup-private]" --index-url https://pypi.pkg.github.com/cruise311/simple
+lookup-private = [
+    "amz-lead-lookup-private @ git+ssh://git@github.com/cruise311/amz-lead-private.git@main",
+]
 
 [project.entry-points.console_scripts]
 "amz-collect" = "amz_lead.collect.cli:main"
