@@ -1,0 +1,4 @@
+requests>=2.31
+pypinyin>=0.51
+openpyxl>=3.1
+playwright>=1.45

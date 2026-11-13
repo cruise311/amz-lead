@@ -1,0 +1,10 @@
+home-garden
+kitchen
+sporting-goods
+hi
+toys-and-games
+lawn-garden
+office-products
+hpc
+baby-products
+automotive

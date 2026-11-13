@@ -1,0 +1,38 @@
+# 运费潜力计算权重配置
+# 公式：freight_score = Σ(weight_i * normalized_feature_i)
+# 所有特征均归一化到 [0, 1] 区间
+
+# BSR 排名权重（排名越靠前分越高）
+# 归一化：1 - (rank - 1) / (max_rank - 1)
+bsr_rank_weight: 0.35
+
+# 价格权重（客单价越高运费潜力越大）
+# 归一化：log(price) / log(max_price)
+price_weight: 0.25
+
+# 评论数权重（评论数代表销量基数）
+# 归一化：log(review_count + 1) / log(max_review_count + 1)
+review_count_weight: 0.20
+
+# 类目乘数（不同类目运费结构不同）
+# 取自 configs/cats.yaml 中的 yield_weight
+category_multiplier_enabled: true
+
+# 店铺年龄权重（老店更稳定）
+# 归一化：min(age_months / 36, 1.0)
+store_age_weight: 0.10
+
+# FBA 使用率权重（FBA 卖家运费更标准化）
+# 归一化：fba_asin_count / total_asin_count
+fba_usage_weight: 0.10
+
+# 输出分档阈值（年运费 USD）
+tier_thresholds:
+  low: 2268      # < $2,268/年 → 低潜力
+  medium: 7560   # $2,268 - $7,560 → 中潜力
+  high: 999999   # >= $7,560 → 高潜力
+
+# 说明：
+# - 这些权重基于 2026-11 实测 3425 家卖家样本回归拟合得出
+# - 如需针对特定服务商（货代/海外仓/营销）调整，建议用其历史成交数据重跑回归
+# - 修改后需重新跑一次评分：amz-resolve --rescore

@@ -1,0 +1,12 @@
+industrial 0.55
+wireless 0.80
+home-garden 0.50
+sporting-goods 0.39
+automotive 0.15
+hi 0.20
+toys-and-games 0.20
+lawn-garden 0.20
+office-products 0.20
+hpc 0.20
+baby-products 0.20
+kitchen 0.20

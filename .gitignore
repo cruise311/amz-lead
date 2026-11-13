@@ -1,0 +1,90 @@
+# amz-lead .gitignore
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual environments
+venv/
+env/
+ENV/
+.venv
+env.bak/
+venv.bak/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Project data (不提交数据文件)
+data/
+logs/
+*.csv
+*.xlsx
+*.jsonl
+*.json
+*.pkl
+*.parquet
+
+# Local config (敏感信息)
+configs/*.local.yaml
+.env
+.env.local
+.env.*.local
+
+# Playwright
+playwright/.auth/
+playwright/traces/
+
+# Test coverage
+htmlcov/
+.coverage
+.coverage.*
+coverage.xml
+*.cover
+.pytest_cache/
+
+# Type checking
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Ruff
+.ruff_cache/
+
+# Distribution
+*.whl
+*.tar.gz
+
+# Jupyter
+.ipynb_checkpoints/
+
+# OS
+Thumbs.db
+ehthumbs.db
+Desktop.ini

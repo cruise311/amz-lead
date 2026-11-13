@@ -1,0 +1,47 @@
+# amz-lead 本地敏感配置模板
+# 复制为 settings.local.yaml 并填入真实值（.gitignore 已忽略 *.local.yaml）
+
+# ========== 探迹配置 ==========
+lookup:
+  tungee:
+    username: "your_tungee_username"
+    password: "your_tungee_password"
+    batch_limit: 10
+    unlock_delay: 5
+  tyc:
+    api_key: "your_tyc_api_key"
+    enabled: true
+  qcc:
+    api_key: "your_qcc_api_key"
+    enabled: false
+
+# ========== 代理配置 ==========
+collect:
+  proxy:
+    enabled: false
+    url: "http://user:pass@host:port"
+    rotate_per_request: true
+
+# ========== 企查查/天眼查核验（还原阶段可选） ==========
+resolve:
+  qcc:
+    enabled: false
+    api_key: ""
+    rate_limit: 100
+  tyc:
+    enabled: false
+    api_key: ""
+    rate_limit: 100
+
+# ========== 监控告警 ==========
+monitoring:
+  enabled: true
+  webhook_url: "https://your-webhook-url"
+  alert_on:
+    - "captcha_rate > 0.1"
+    - "success_rate < 0.5"
+    - "proxy_failure > 5"
+
+# ========== 日志级别 ==========
+logging:
+  level: "INFO"

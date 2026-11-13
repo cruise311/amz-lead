@@ -1,0 +1,144 @@
+# amz-lead 全局运行配置
+# 复制为 settings.local.yaml 并在其中覆盖敏感值（.gitignore 已忽略 .local.yaml）
+
+# 存储配置
+storage:
+  # 数据根目录（相对项目根目录或绝对路径）
+  data_root: "data"
+  # 原始采集数据保留天数
+  raw_retention_days: 30
+  # 处理后数据保留天数
+  processed_retention_days: 180
+  # 输出格式：csv, xlsx, parquet
+  output_format: "csv"
+
+# 采集层配置
+collect:
+  # 默认类目配置文件
+  cats_config: "configs/cats.yaml"
+  # 默认产出目录
+  output_dir: "data/raw"
+  # 采集模式：full(全量) / incremental(增量) / test(测试前10条)
+  mode: "incremental"
+  # 增量采集：仅采集过去 N 天有更新的卖家
+  incremental_days: 7
+  # 是否启用无头模式
+  headless: true
+  # 浏览器视口大小
+  viewport: {width: 1920, height: 1080}
+
+# 还原层配置
+resolve:
+  # 输入文件（相对 data_root）
+  input_file: "raw/leads_raw.csv"
+  # 输出文件
+  output_file: "processed/leads_resolved.csv"
+  # 企查查/天眼查 API 配置（二选一或都填）
+  qcc:
+    enabled: false
+    api_key: ""  # 填入 .local.yaml
+    rate_limit: 100  # 次/分钟
+  tyc:
+    enabled: false
+    api_key: ""
+    rate_limit: 100
+  # 还原策略
+  strategy:
+    # 是否必须有城市前缀才尝试还原
+    require_city_prefix: true
+    # 候选数上限
+    max_candidates: 10
+    # 置信度阈值：高于此值自动标记为"高置信"
+    high_confidence_threshold: 0.85
+    # 低置信阈值：低于此值标记为"需人工复核"
+    low_confidence_threshold: 0.5
+
+# 补号层配置
+lookup:
+  # 输入文件
+  input_file: "processed/leads_resolved.csv"
+  # 输出文件
+  output_file: "enriched/leads_enriched.csv"
+  # 探迹配置
+  tungee:
+    enabled: true
+    # 账号配置在 .local.yaml
+    username: ""
+    password: ""
+    # 单批解锁上限
+    batch_limit: 10
+    # 解锁间隔（秒）
+    unlock_delay: 5
+    # 验证码处理
+    captcha:
+      enabled: true
+      max_retries: 3
+      # 验证码数据集路径（用于训练/匹配）
+      dataset_path: "data/captcha_dataset"
+  # 天眼查兜底
+  tyc:
+    enabled: true
+    api_key: ""
+    rate_limit: 60
+  # 企查查兜底
+  qcc:
+    enabled: false
+    api_key: ""
+    rate_limit: 60
+  # 回填策略
+  backfill:
+    # 四色标记规则
+    tiers:
+      - name: "可直接外呼"
+        color: "green"
+        condition: "phone_type == 'mobile' and confidence >= 0.9"
+      - name: "需复核"
+        color: "yellow"
+        condition: "phone_type == 'landline' or confidence < 0.9"
+      - name: "不可外呼"
+        color: "red"
+        condition: "phone_type == 'virtual' or blacklisted"
+      - name: "无号码"
+        color: "gray"
+        condition: "phone is null"
+
+# 评分层配置
+scoring:
+  # 权重配置
+  weights:
+    freight_potential: 0.4      # 年运费潜力
+    entity_confidence: 0.25     # 主体还原置信度
+    phone_quality: 0.2          # 号码质量（手机>座机>虚拟）
+    address_match: 0.1          # 地址匹配度
+    category_fit: 0.05          # 类目契合度
+  # 分层阈值
+  tiers:
+    - name: "A级-核心客户"
+      min_score: 80
+      color: "green"
+    - name: "B级-重点跟进"
+      min_score: 60
+      color: "blue"
+    - name: "C级-长期培育"
+      min_score: 40
+      color: "yellow"
+    - name: "D级-低优先级"
+      min_score: 0
+      color: "gray"
+
+# 日志配置
+logging:
+  level: "INFO"
+  format: "%(asctime)s | %(levelname)-8s | %(name)s | %(message)s"
+  file: "logs/amz-lead.log"
+  max_bytes: 10485760  # 10MB
+  backup_count: 5
+
+# 监控告警（可选）
+monitoring:
+  enabled: false
+  webhook_url: ""
+  alert_on:
+    - "captcha_rate > 0.1"
+    - "success_rate < 0.5"
+    - "proxy_failure > 5"

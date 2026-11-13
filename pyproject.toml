@@ -1,0 +1,63 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "amz-lead"
+version = "0.1.0"
+description = "Amazon Seller Lead Generation Pipeline: BSR Crawling → Entity Resolution → Phone Enrichment"
+readme = "README.md"
+license = {text = "MIT"}
+requires-python = ">=3.10"
+dependencies = [
+    "requests>=2.31.0",
+    "pandas>=2.0.0",
+    "openpyxl>=3.1.0",
+    "playwright>=1.40.0",
+    "lxml>=4.9.0",
+    "tqdm>=4.66.0",
+    "pydantic>=2.5.0",
+    "pyyaml>=6.0.0",
+    "python-dotenv>=1.0.0",
+    "tenacity>=8.2.0",
+]
+optional-dependencies = {
+    "dev": [
+        "pytest>=7.4.0",
+        "pytest-cov>=4.1.0",
+        "black>=23.0.0",
+        "ruff>=0.1.0",
+        "mypy>=1.7.0",
+        "ipykernel>=6.29.0",
+    ],
+    "ocr": [
+        "paddleocr>=2.7.0",
+        "opencv-python>=4.8.0",
+        "numpy>=1.24.0",
+    ],
+}
+
+[project.entry-points]
+console_scripts = [
+    "amz-collect = amz_lead.collect.cli:main",
+    "amz-resolve = amz_lead.resolve.cli:main",
+    "amz-lookup = amz_lead.lookup.cli:main",
+    "amz-pipeline = amz_lead.pipeline:main",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["amz_lead*"]
+
+[tool.black]
+line-length = 100
+target-version = ['py310']
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.mypy]
+python_version = "3.10"
+warn_return_any = true
+warn_unused_configs = true
