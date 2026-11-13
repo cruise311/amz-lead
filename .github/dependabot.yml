@@ -1,0 +1,50 @@
+# .github/dependabot.yml
+# Dependabot configuration for amz-lead
+
+version: 2
+updates:
+  - package-ecosystem: "pip"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "02:00"
+      timezone: "Asia/Shanghai"
+    labels:
+      - "dependencies"
+      - "python"
+    commit-message:
+      prefix: "chore(deps)"
+    groups:
+      dev-tools:
+        patterns:
+          - "ruff"
+          - "mypy"
+          - "pre-commit"
+          - "pytest*"
+          - "playwright"
+          - "build"
+          - "twine"
+      data-science:
+        patterns:
+          - "pandas"
+          - "numpy"
+          - "scipy"
+      web-scraping:
+        patterns:
+          - "scrapling"
+          - "playwright"
+          - "httpx"
+          - "requests"
+    open-pull-requests-limit: 10
+
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "02:30"
+      timezone: "Asia/Shanghai"
+    labels:
+      - "dependencies"
+      - "github-actions"
