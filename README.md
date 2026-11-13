@@ -70,7 +70,8 @@ amz-lead/
 │   │       ├── tungee_runner.py      # 探迹批量跑批主流程
 │   │       ├── tungee_unlock_api.py  # 探迹解锁接口封装
 │   │       ├── captcha_agent.py      # 验证码自愈（滑块/点选/图标）
-│   │       ├── ocr_phone.py          # 虚拟渲染号段 OCR 识别
+│   │       ├── ocr_phone.py          # macOS Vision + Tesseract 兜底 (仅 macOS)
+│   │       ├── ocr_rapid.py          # RapidOCR (Linux/Windows/Server, Apache-2.0)
 │   │       ├── backfill_excel.py     # 结果回填 Excel、四色标记
 │   │       ├── build_batches.py      # 外呼工单分批、去重、优先级排序
 │   │       ├── tyc_lookup.py         # 天眼查兜底查询
@@ -89,6 +90,24 @@ amz-lead/
 ├── README.md
 └── LICENSE
 ```
+
+```
+---
+
+## 🔍 OCR 技术栈（许可证合规版）
+
+`amz-lead` 的补号流程需要从探迹/天眼查的虚拟渲染号码图片中提取手机号。为避免 AGPL/LGPL 传染，**开源版仅提供接口定义**，私有版提供两套 Apache-2.0 许可的 OCR 引擎：
+
+| 引擎 | 文件 | 适用平台 | 依赖 | 许可证 | 特点 |
+|---|---|---|---|---|---|
+| **macOS Vision** | `ocr_phone.py` | macOS 10.15+ | 系统内置 (Vision.framework) | Apple 系统许可 | 零依赖、冷启动 ~10ms、数字识别 100% |
+| **RapidOCR** | `ocr_rapid.py` | Linux / Windows / 容器 | `rapidocr-onnxruntime` + `onnxruntime` + `opencv-python-headless` | **Apache-2.0** | 纯 Python、CPU 推理、无 GUI 依赖、无 soxr/LGPL |
+
+**部署策略**：
+- macOS 开发机：优先使用 `ocr_phone` (系统级 Vision，最快最准，无需安装)
+- Linux 服务器 / Docker 容器 / CI：仅用 `ocr_rapid` (`pip install rapidocr-onnxruntime onnxruntime opencv-python-headless`)
+
+**开源版**：仅提供 `ILookupProvider` 抽象接口，使用者自行实现 OCR 或调用第三方 API。
 
 ---
 
