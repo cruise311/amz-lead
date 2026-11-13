@@ -1,5 +1,11 @@
 # amz-lead: Amazon Seller Lead Generation Pipeline
 
+![CI](https://github.com/cruise311/amz-lead/actions/workflows/ci.yml/badge.svg)
+![License](https://img.shields.io/badge/license-MIT-blue.svg)
+![Python](https://img.shields.io/badge/python-3.10+-blue.svg)
+![Code style: ruff](https://img.shields.io/badge/code%20style-ruff-000000.svg)
+![Types: mypy](https://img.shields.io/badge/typed-100%25-blue.svg)
+
 > **从 BSR 榜单到可打电话的卖家名单，全链路自动化。**
 
 `amz-lead` 是一个面向跨境电商服务商（货代、海外仓、营销、合规、金融）的**开源数据采集与清洗框架**。它解决一个核心问题：**如何以低成本、高合规、可持续的方式，持续获取「亚马逊美国站中国卖家」的真实联系方式与经营画像。**
